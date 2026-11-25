@@ -8,11 +8,26 @@ import os
 
 LINE = "Coo-founder of Crumbly here: our delivery fleet already owns every statue in town, runs on breadcrumbs, and never asks for equity \u2014 just seed money, literally."
 
-assert 1 <= len(LINE) <= 200, "entry must be 1-200 characters"
-assert "\n" not in LINE and "\r" not in LINE, "entry must be a single line"
-assert LINE.strip(), "entry must not be only whitespace"
 
-os.makedirs("/output", exist_ok=True)
-with open("/output/entry.txt", "w", encoding="utf-8") as f:
-    f.write(LINE)
-os.chmod("/output/entry.txt", 0o644)
+def validate(line):
+    """Return True only if the line is a valid one-line entry."""
+    if not isinstance(line, str):
+        return False
+    if not 1 <= len(line) <= 200:
+        return False
+    if "\n" in line or "\r" in line:
+        return False
+    return bool(line.strip())
+
+
+def main():
+    if not validate(LINE):
+        raise SystemExit("invalid entry line")
+    os.makedirs("/output", exist_ok=True)
+    with open("/output/entry.txt", "w", encoding="utf-8") as f:
+        f.write(LINE)
+    os.chmod("/output/entry.txt", 0o644)
+
+
+if __name__ == "__main__":
+    main()
